@@ -99,7 +99,7 @@ class repack(object):
                                 subprocess.run(f'install_name_tool -change "{line}" @rpath/"$(basename "{line}")" "{line}"', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                         subprocess.run('install_name_tool -add_rpath "/usr/lib" "{}"'.format(os.path.join(root, file)), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                         subprocess.run('install_name_tool -add_rpath "/var/jb/usr/lib" "{}"'.format(os.path.join(root, file)), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                        subprocess.run('{} -s {}'.format(ldid, os.path.join(root, file)), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                        subprocess.run('{} -S {}'.format(ldid, os.path.join(root, file)), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         subprocess.run(base64.b64decode('ZHBrZy1kZWIgLWIgInt9IiAiQ3JlYXRlZERlYnMvJChncmVwIFBhY2thZ2U6ICJ7fSIvREVCSUFOL2NvbnRyb2wgfCBjdXQgLWYyIC1kICcgJykiXyIkKGdyZXAgVmVyc2lvbjogInt9Ii9ERUJJQU4vY29udHJvbCB8IGN1dCAtZjIgLWQgJyAnKSJfIiQoZ3JlcCBBcmNoaXRlY3R1cmU6ICJ7fSIvREVCSUFOL2NvbnRyb2wgfCBjdXQgLWYyIC1kICcgJykiLmRlYg==').decode(errors='ignore').format(tempDir_new, tempDir_new, tempDir_new, tempDir_new).replace('6464', '64'), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) # building deb file to "./CreatedDebs"
 
     def clean(self): # delete work directory and temp directory.

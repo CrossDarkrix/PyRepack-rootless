@@ -67,6 +67,8 @@ class repack(object):
 
         with open(os.path.join(tempDir_old, 'DEBIAN', 'control'), 'r', encoding='utf-8') as sed: # replace iphoneos-arm to iphoneos-arm64
             s = sed.read().replace('iphoneos-arm', 'iphoneos-arm64')
+            if 'iphoneos-arm6464' in s:
+                s = s.replace('iphoneos-arm6464', 'iphoneos-arm64')
             with open(os.path.join(tempDir_new, 'DEBIAN', 'control'), 'w', encoding='utf-8') as sedf:
                 sedf.write(s) # write control file.
         try:
@@ -99,8 +101,8 @@ class repack(object):
                                 subprocess.run(f'install_name_tool -change "{line}" @rpath/"$(basename "{line}")" "{line}"', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                         subprocess.run('install_name_tool -add_rpath "/usr/lib" "{}"'.format(os.path.join(root, file)), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                         subprocess.run('install_name_tool -add_rpath "/var/jb/usr/lib" "{}"'.format(os.path.join(root, file)), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                        subprocess.run('{} -S {}'.format(ldid, os.path.join(root, file)), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        subprocess.run(base64.b64decode('ZHBrZy1kZWIgLWIgInt9IiAiQ3JlYXRlZERlYnMvJChncmVwIFBhY2thZ2U6ICJ7fSIvREVCSUFOL2NvbnRyb2wgfCBjdXQgLWYyIC1kICcgJykiXyIkKGdyZXAgVmVyc2lvbjogInt9Ii9ERUJJQU4vY29udHJvbCB8IGN1dCAtZjIgLWQgJyAnKSJfIiQoZ3JlcCBBcmNoaXRlY3R1cmU6ICJ7fSIvREVCSUFOL2NvbnRyb2wgfCBjdXQgLWYyIC1kICcgJykiLmRlYg==').decode(errors='ignore').format(tempDir_new, tempDir_new, tempDir_new, tempDir_new).replace('6464', '64'), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) # building deb file to "./CreatedDebs"
+                        subprocess.run('{} -s {}'.format(ldid, os.path.join(root, file)), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        subprocess.run(base64.b64decode('ZHBrZy1kZWIgLWIgInt9IiAiQ3JlYXRlZERlYnMvJChncmVwIFBhY2thZ2U6ICJ7fSIvREVCSUFOL2NvbnRyb2wgfCBjdXQgLWYyIC1kICcgJykiXyIkKGdyZXAgVmVyc2lvbjogInt9Ii9ERUJJQU4vY29udHJvbCB8IGN1dCAtZjIgLWQgJyAnKSJfIiQoZ3JlcCBBcmNoaXRlY3R1cmU6ICJ7fSIvREVCSUFOL2NvbnRyb2wgfCBjdXQgLWYyIC1kICcgJykiLmRlYg==').decode(errors='ignore').format(tempDir_new, tempDir_new, tempDir_new, tempDir_new), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) # building deb file to "./CreatedDebs"
 
     def clean(self): # delete work directory and temp directory.
         print('Cleaning up')
